@@ -11,7 +11,7 @@ const pooRouter = require('./src/routes/pooRoutes')
 // for schema creation
 
 const corsOptions = {
-    origin: `${process.env.FRONT_END_DOMAIN}`, // Replace with your frontend's domain
+    origin: process.env.FRONT_END_DOMAIN, // Replace with your frontend's domain
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     credentials: true, // If you're using cookies or sessions
 };
