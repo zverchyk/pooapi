@@ -1,34 +1,16 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
-
-const { MongoClient} = require('mongodb');
-
-
-// link for connection
-const uri = `mongodb+srv://admin:${process.env.DB_PASS}@cluster0.tcvrh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
-// name of database
-const dbName = "DailyPoo-database";
+const {getCollection} = require('./dbConnection')
 
 // name of collection
 const collectionName = "pooSessions";
 
-// Object that references the connection
-const client = new MongoClient(uri);
-
-// actuall connection with account for this api
-
 const createPooList = async function (userId) {
 
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
+    
+    const collection = await getCollection(collectionName)
 
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
- 
     // Document to insert
     const newPooSessions = {
       userId:userId,
@@ -37,93 +19,129 @@ const createPooList = async function (userId) {
     };
 
     // Insert the document into the collection
-    const result = await collection.insertOne(newPooSessions);
-    console.log("User inserted:", result);
+    await collection.insertOne(newPooSessions);
+    return "Poo list inserted:"
   } catch (err) {
     console.error("Error inserting user:", err);
-  } finally {
-    
-    // Close the connection
-    await client.close();
-    console.log("Connection closed");
-  }
+  } 
 };
 
-const getPooList = async function(userId){
+const createSession = async function(userInfo){
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
+    
+    const collection = await getCollection(collectionName)
+    
+    const searchQuery ={
+      userId: userInfo.userId
+    }
+    // Document to insert
+    const newPooSessions = {$push:{"allUserSessions":
+        {day: userInfo.day,
+        times:[]}}
 
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
+    };
 
-    const findQuery = {userId: userId}
+    // Insert the document into the collection
+    await collection.updateOne(searchQuery, newPooSessions);
+    return "Session inserted"
+  } catch (err) {
+    console.error("Error inserting user:", err);
+  } 
+}
 
-    const response = await collection.findOne(findQuery);
+// get poo list for today
+const getSession = async function(userInfo){
+  try {
+
+    const collection = await getCollection(collectionName)
+
+    const findQuery = {userId: userInfo.userId}
+
+    const projectionQuery = {
+      allUserSessions: 1
+    }
+
+    const response = await collection.findOne(findQuery, projectionQuery);
+    
+      
     if (response) {
-      return response.allUserSessions
-
+      const filteredSession = response.allUserSessions.find(elem => elem.day === userInfo.day);
+   
+      if (!filteredSession) {
+        throw {status: 404, message: 'no session found for this day'}
+      }
+      
+      return filteredSession.times
     } else {
-      throw({status: 404, message: 'No pooList found with the provided email'})
+      throw { status: 404, message: "No session found for the specified userId and day" }
     }
 
   } catch (err) {
     throw ({status: err?.status || 500, message: err?.message || err})
   }
   
-   finally {
-    
-    if (client.topology && client.topology.isConnected()) {
-      await client.close();
-      console.log("Connection closed");
-    }
-  }
+
 
 }
 
 const updateSession = async function(userInfo){
 
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
+    const collection = await getCollection(collectionName)
 
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
+    const findQuery ={
+      "userId": userInfo.userId,
+      "allUserSessions": {$elemMatch: {day: userInfo.day}}
+    }
+
+    const setQuery = {
+       $set: { "allUserSessions.$.times": userInfo.times} //update operation
+    }
+    const matchingDocuments = await collection.find(findQuery).toArray();
+
+     const result = await collection.updateOne(findQuery,setQuery);
+         // Check if the document was updated
+    if (result.matchedCount === 0) {
+      throw { status: 404, message: "No session found for the specified userId and day" };
+    }
+    if (result.modifiedCount === 0) {
+      throw { status: 304, message: "No changes made to the session" };
+    }
     
-    const updateQuery = {
-      $push: {allUserSessions: {
-        day: userInfo.day,
-        times: userInfo.times
-      }}
-    }
-
-    const pooSessions = await collection.updateOne({userId: userInfo.userId},updateQuery);
-    if (pooSessions) {
-      return pooSessions.modifiedCount
-    } else {
-      throw({status: 404, message: 'no poolist found' })
-    }
+    return `Today's session updated`
+    
 
   } catch (err) {
     throw({status: err?.status || 500, message: err?.message || err })
   }
-  
-   finally {
-      await client.close();
-      console.log('connection closed')
 
-    }
   }
 
+  const deletePooList = async function(userId){
+     try{
+          
+        const collection = await getCollection(collectionName)
+        const deleteQuery= {userId:userId}
+
+        const deleteResult = await collection.deleteOne(deleteQuery)
+        return deleteResult.deletedCount
+
+     }catch(err){
+      console.error(`Something went wrong trying to delete documents: ${err}\n`);
+  
+     }
+  }
+ 
+const deleteSessionElement = async function(){
+
+}
 
 
 module.exports ={
   createPooList,
-  getPooList,
-  updateSession
+  getSession,
+  updateSession,
+  createSession,
+  deletePooList
 }
 

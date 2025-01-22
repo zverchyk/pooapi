@@ -1,4 +1,5 @@
 const User = require('../database/users')
+const poo = require('../database/poo')
 
 
 
@@ -11,9 +12,17 @@ const getUser = async function(userInfo){
     }
 }
 
-const deleteUser = function(userId){
+const deleteUser = async function(userId){
     try{
-        User.deleteUser(userId)
+        const responseUser = await User.deleteUser(userId)
+        const responsePoo =await poo.deletePooList(userId)
+
+        if(responseUser!== 0 && responsePoo !==0){
+            return 'deletion succesful'
+        }else{
+            throw ({message:'deletion was unsuccesful'})
+        }
+       
     }catch(err){
         throw err
     }

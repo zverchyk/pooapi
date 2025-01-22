@@ -26,26 +26,38 @@ const createUser = async (req,res)=>{
 
     }
 
-const deleteUser =async function(req, res){
-  const {params: userId} =req
-  if(!userId) {
-    res
-.status(400)
-.send({data: 
-{
-  error: "parametr is missing"
-}
-})
-}
-    try{
-      await userService.deleteUser(userId)
-      res.send({status: "OK", message:'user seccesfully deleted'})
-
-    }catch(err){
-      res.send({status: err?.status ||500, message: err?.message || err})
-    }
+    const deleteUser = async function (req, res) {
+      const {
+          params: { userId },
+      } = req;
   
-}
+      // Validate userId
+      if (!userId) {
+          return res.status(400).send({
+              data: {
+                  error: 'Parameter is missing',
+              },
+          });
+      }
+  
+      try {
+          // Attempt to delete the user
+          const response = await userService.deleteUser(userId);
+  
+          // Send success response
+          res.status(200).send({
+              status: 'OK',
+              message: response,
+          });
+      } catch (err) {
+          // Handle errors
+          res.status(err?.status || 500).send({
+              status: 'ERROR',
+              message: err?.message || 'An unexpected error occurred',
+          });
+      }
+  };
+  
 
 const getUser = async (req,res)=>{
     const {email, password} =req.query

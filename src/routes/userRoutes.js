@@ -12,10 +12,10 @@ router.get('/', userControl.getUser)
 router.post('/new', userControl.createUser)
 
 // delete user 
-router.delete('/', userControl.deleteUser)
+router.delete('/:userId', userControl.deleteUser)
 
 // find existing user
-router.get('/exist', userControl.findUser)
+router.get('/exist/', userControl.findUser)
 
 
 

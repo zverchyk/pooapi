@@ -7,20 +7,19 @@ const createPooList = async function(userId){
     }catch(err){
         throw(err)
     }
-}
+} 
 
-const getPooList = async function(userId){
+const getSession = async function(userInfo){
     try{
-        const response = await poo.getPooList(userId)
+        const response = await poo.getSession(userInfo)
         return response
     }catch(err){
         throw(err)
     }
 }
 
-const updateSession = async function(userId, body){
+const updateSession = async function(userInfo){
     try{
-        const userInfo = {userId: userId, day: body.day, times: body.times}
         const response =await poo.updateSession(userInfo)
         return response
 
@@ -29,9 +28,22 @@ const updateSession = async function(userId, body){
     }
 }
 
+const createSession = async function(userInfo){
+    try{    
+        const response = await poo.createSession(userInfo)
+        return response
+    }catch(err){
+        throw(err)
+    
+}
+}
+
+
+
 module.exports ={
     createPooList,
-    getPooList,
-    updateSession
+    getSession,
+    updateSession,
+    createSession
   }
   

@@ -1,0 +1,26 @@
+GET http://localhost:3000/poo/testadmintcom?day=19012025
+
+###
+
+POST http://localhost:3000/poo/newlist/testadmintcom
+Content-Type: application/json
+
+
+
+###
+
+PUT http://localhost:3000/poo/testadmintcom
+Content-Type: application/json
+
+{
+  "day": "19012025",
+  "times":[ "password", "change"]
+}
+###
+POST http://localhost:3000/poo/testadmintcom?day=19012025
+Content-Type: application/json
+
+
+###
+DELETE  http://localhost:3000/users/678c117cac536d0f09dc9026
+Content-Type: application/json

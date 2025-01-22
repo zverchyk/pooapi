@@ -5,20 +5,13 @@ const bcrypt =require('bcrypt')
 
 const { v4: uuid, v4 } = require("uuid");
 
-const { MongoClient, ServerApiVersion, FindCursor } = require('mongodb');
+const { MongoClient, ServerApiVersion, FindCursor, ObjectId } = require('mongodb');
 const { model } = require('mongoose');
 
-// link for connection
-const uri = `mongodb+srv://admin:${process.env.DB_PASS}@cluster0.tcvrh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
-// name of database
-const dbName = "DailyPoo-database";
-
+const {getCollection} = require('./dbConnection')
 // name of collection
 const collectionName = "users";
 
-// Object that references the connection
-const client = new MongoClient(uri);
 
 // actuall connection with account for this api
 
@@ -26,13 +19,8 @@ const createUser = async function (userInfo) {
 
 
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
 
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
+    const collection = await getCollection(collectionName)
  
     // Document to insert
     const newUser = {
@@ -42,34 +30,24 @@ const createUser = async function (userInfo) {
 
     // Insert the document into the collection
     const result = await collection.insertOne(newUser);
-    return result.insertedId
+    return result.insertedId.toHexString()
 
   } catch (err) {
     console.error("Error inserting user:", err);
-  } finally {
-    
-    // Close the connection
-    await client.close();
-    console.log("Connection closed");
-  }
+  } 
 };
 
 const getUser = async function(userInfo){
-  let user = null
+ 
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
 
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
+    const collection = await getCollection(collectionName)
 
     const findQuery = {email: userInfo.email}
 
     const user = await collection.findOne(findQuery);
     if (user) {
-      console.log(`User found: Email: ${user.email}, Password: ${user.password}`);
+
       if(await bcrypt.compare(userInfo.password, user.password)) {
         return user._id
       } else {
@@ -85,26 +63,14 @@ const getUser = async function(userInfo){
     console.error("Error inserting user:", err);
   }
   
-   finally {
-    
-    if (client.topology && client.topology.isConnected()) {
-      await client.close();
-      console.log("Connection closed");
-    }
-  }
+
 
 }
 
 const findUser = async function(userName){
-  console.log(userName)
+ 
   try {
-    // Connect to the database as a client
-    await client.connect();
-    console.log("Connected to MongoDB");
-
-    // References to run operations in the database and collection
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
+    const collection = await getCollection(collectionName)
 
     const findQuery = {email: userName}
 
@@ -121,43 +87,24 @@ const findUser = async function(userName){
     console.error("Error inserting user:", err);
   }
   
-  //  finally {
-    
-  //   if (client.topology && client.topology.isConnected()) {
-  //     await client.close();
-  //     console.log("Connection closed");
-  //   }
-  // }
+
 
 }
 
 const deleteUser = async function(userId){
    try{
-        // Connect to the database as a client
-        await client.connect();
-        console.log("Connected to MongoDB");
+    console.log('heolo')
+    const collection = await getCollection(collectionName)
 
-        // References to run operations in the database and collection
-        const database = client.db(dbName);
-        const collection = database.collection(collectionName);
-
-        const deleteQuery= {_id:userId}
+        const deleteQuery= {_id:new ObjectId(userId)}
 
         const deleteResult = await collection.deleteOne(deleteQuery)
-        console.dir(deleteResult)
-        for (const key in deleteResult){
-          console.log(key, deleteResult[key])
-        }
-
+        return deleteResult.deletedCount
 
 
    }catch(err){
-    console.error(`Something went wrong trying to delete documents: ${err}\n`);
-
-   }finally{
-        // Close the connection
-        await client.close();
-        console.log("Connection closed");
+    throw(err)
+   
    }
 }
 

@@ -5,11 +5,14 @@ const pooControl = require("../control/pooControl")
 const router = express.Router()
 
 
-router.get('/:userid', pooControl.getPooList)
+router.get('/:userId', pooControl.getSession)
 
-router.post('/:userid', pooControl.createPooList)
+router.post('/newlist/:userId', pooControl.createPooList)
 
-router.put('/:userid', pooControl.updateSession)
+router.put('/:userId', pooControl.updateSession)
+
+router.post('/:userId', pooControl.createSession)
 
 
 module.exports = router
+

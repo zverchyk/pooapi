@@ -1,5 +1,6 @@
 require('dotenv').config()
 const cors = require('cors');
+const {closeDbConnection} = require('./src/database/dbConnection')
 
 const express = require('express')
 const app = express()
@@ -21,3 +22,9 @@ app.use('/poo', pooRouter)
 
 
 app.listen(3000, ()=>console.log('server started'))
+
+process.on('SIGINT', async () => {
+    console.log('Closing database connection...');
+    await closeDbConnection(); // Close MongoDB connection
+    process.exit(0); // Exit the application
+});
