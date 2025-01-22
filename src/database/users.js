@@ -5,7 +5,7 @@ const bcrypt =require('bcrypt')
 
 const { v4: uuid, v4 } = require("uuid");
 
-const { MongoClient, ServerApiVersion, FindCursor, ObjectId } = require('mongodb');
+const {  ObjectId } = require('mongodb');
 const { model } = require('mongoose');
 
 const {getCollection} = require('./dbConnection')
@@ -16,7 +16,6 @@ const collectionName = "users";
 // actuall connection with account for this api
 
 const createUser = async function (userInfo) {
-
 
   try {
 
