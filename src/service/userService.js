@@ -36,7 +36,7 @@ const loginUser = async function(userInfo){
             session = await poo.createSession(userId, userInfo.day)
         }
 
-        return session
+        return [session, userId]
 
     }catch(err){
         throw err

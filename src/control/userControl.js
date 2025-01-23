@@ -36,9 +36,12 @@ const loginUser = async (req,res)=>{
       const body = {day: day, email:email, password: password}
 
        try{
-        const session = await userService.loginUser(body)
+        const [session, userId] = await userService.loginUser(body)
         console.log(session)
-        res.status(200).send({data: session? session.times: `todays' session created`})
+        res.status(200).send({data: {
+          userId: userId,
+          session: session? session.times: `todays' session created`}
+        })
 
        }catch(err){
         console.error(err)
@@ -78,6 +81,7 @@ const deleteUser = async function (req, res) {
 const logoutUser = async function(req, res){
   try{
     await userService.logoutUser()
+    res.status(200).send({data: 'user succesfuly logged out'})
    }catch(err){
     res.status(err?.status || 500).send({
       status: 'ERROR',

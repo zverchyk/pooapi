@@ -1,7 +1,7 @@
 
 
 
-### Get user by userId
+### Get loging user
 GET http://localhost:3000/users/?email=too&password=too&day=456331
 
 
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
   "day": "test",
-  "email": "tedfsgst",
+  "email": "test2",
   "password": "password123"
 }
 
@@ -28,7 +28,7 @@ PUT http://localhost:3000/poo/update
 Content-Type: application/json
 
 {
-  "userId": "6791c84e7e018b986478082",
+  "userId": "6791e0d52322876061583c58",
   "day": "test",
   "times": [222,3232,233233]
 }
