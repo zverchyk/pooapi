@@ -9,7 +9,12 @@ console.log("DB_PASS:", process.env.DB_PASS);
 
 // name of database
 const dbName = "DailyPoo-database";
-const client = new MongoClient(uri);
+
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true, // Ensure TLS is enabled
+  });
 
 
 let dbInstance;

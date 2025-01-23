@@ -45,21 +45,29 @@ const getUser = async function(userInfo){
     const findQuery = {email: userInfo.email}
 
     const user = await collection.findOne(findQuery);
-    if (user) {
-
-      if(await bcrypt.compare(userInfo.password, user.password)) {
-        return user._id
-      } else {
-        return false
-      }
-
-    } else {
-      console.log("No user found with the provided email")
-      return false
+    if (!user) {
+      console.warn("No user found with the provided email:", userInfo.email);
+      return { status: "Failed", message: "User not found" };
+    }
+    
+    // compare passwords 
+    const isPasswordValid = await bcrypt.compare(userInfo.password, user.password);
+    if (!isPasswordValid) {
+      console.warn("Invalid password for user:", userInfo.email);
+      return { success: false, message: "Invalid password" };
     }
 
+    // Return user ID if successful
+    return { success: true, userId: user._id };
+
   } catch (err) {
-    console.error("Error inserting user:", err);
+    // Log detailed error and rethrow if needed
+    console.error("Error retrieving user:", {
+      message: err.message,
+      stack: err.stack,
+      userInfo,
+    });
+    throw new Error("An unexpected error occurred while retrieving the user");
   }
   
 
