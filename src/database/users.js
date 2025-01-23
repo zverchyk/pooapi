@@ -5,7 +5,7 @@ const bcrypt =require('bcrypt')
 
 const { v4: uuid, v4 } = require("uuid");
 
-const { MongoClient, ServerApiVersion, FindCursor, ObjectId } = require('mongodb');
+const {  ObjectId } = require('mongodb');
 const { model } = require('mongoose');
 
 const {getCollection} = require('./dbConnection')
@@ -16,7 +16,6 @@ const collectionName = "users";
 // actuall connection with account for this api
 
 const createUser = async function (userInfo) {
-
 
   try {
 
@@ -64,7 +63,13 @@ const loginUser = async function(userInfo){
 
 
   } catch (err) {
-    console.error("Error inserting user:", err);
+    // Log detailed error and rethrow if needed
+    console.error("Error retrieving user:", {
+      message: err.message,
+      stack: err.stack,
+      userInfo,
+    });
+    throw new Error("An unexpected error occurred while retrieving the user");
   }
   
 
