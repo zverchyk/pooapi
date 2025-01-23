@@ -33,7 +33,7 @@ const createUser = async function (userInfo) {
 
   } catch (err) {
     console.error("Error inserting user:", err);
-    throw new Error('Database error with inserting user')
+    throw {status: 500, message: 'Database error with inserting user'}
  
   } 
 };
@@ -50,13 +50,14 @@ const loginUser = async function(userInfo){
     
     // checks if user exist 
     if (user === null){
-      throw new Error(`User doesn't exist`)
+
+      throw {status: 404, message: `User doesn't exist`}
     }
 
     const passwordsMatched = await bcrypt.compare(userInfo.password, user.password)
 
     if (!passwordsMatched) {
-      throw new Error(`email or password is not correct`)
+      throw {status: 404, message: `Username or passwrord is incorrect`}
     }
     return user._id.toHexString()
 
@@ -86,8 +87,8 @@ const isUserExist = async function(userName){
     const user = await collection.findOne(findQuery);
 
     if(user !== null){
-      throw new Error('Username is taken')
-    }
+      throw {status: 404, message: 'User already exist'}}
+            
     
    
   } catch (err) {

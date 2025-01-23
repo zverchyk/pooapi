@@ -15,7 +15,7 @@ const createUser = async (req,res)=>{
         try{
           const userId =await userService.createUserAndPoolist(body)
 
-          res.send({status: 200, data:{
+          res.status(200).send({status: 'OK', data:{
             userId: userId,
             message: `new user succsesfully created!!`}})
         }catch(err){
@@ -38,7 +38,9 @@ const loginUser = async (req,res)=>{
        try{
         const [session, userId] = await userService.loginUser(body)
         console.log(session)
-        res.status(200).send({data: {
+        res.status(200).send({
+          status: 'OK',
+          data: {
           userId: userId,
           session: session? session.times: `todays' session created`}
         })
