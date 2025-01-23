@@ -5,11 +5,11 @@ const userService = require('../service/userService')
 const createUser = async (req,res)=>{
         const { body } = req
         if(!body) {
-          res.status(400).send({data: {error: "body is missing"}})
+          res.status(400).send({status: 'failed',data:"body is missing"})
           return
         }
         if (!body.email && !body.password && !body.day){
-          res.status(400).send({data: {error: "parametr is missing"}})
+          res.status(400).send({status: 'failed', data:  "parametr is missing"})
           return
         }
         try{
@@ -19,7 +19,7 @@ const createUser = async (req,res)=>{
             userId: userId,
             message: `new user succsesfully created!!`}})
         }catch(err){
-          res.status(err?.status ||500).send({error: err?.message || err})
+          res.status(err?.status ||500).send({status: 'failed',error: err?.message || err})
       }
 
 
@@ -28,8 +28,8 @@ const loginUser = async (req,res)=>{
       const {day,email, password} =req.query
         // Validate if required parameters are missing
       if (!email || !password || !day) {
-        res.status(400).send({
-          data: { error: "Missing required parameters: email, password, or day" },
+        res.status(400).send({status: 'failed',
+          data:  "Missing required parameters: email, password, or day" 
         });
         return;
       }
@@ -47,7 +47,7 @@ const loginUser = async (req,res)=>{
 
        }catch(err){
         console.error(err)
-        res.status(err?.status || 500).send({error: err?.message || err})
+        res.status(err?.status || 500).send({status: 'failed',data: err?.message || err})
        }
   
   
@@ -58,7 +58,7 @@ const deleteUser = async function (req, res) {
   
       // Validate userId
       if (!userId) {
-          return res.status(400).send({data: {error: 'Parameter is missing'},
+          return res.status(400).send({status: 'failed',data: {error: 'Parameter is missing'},
           });
       }
   
@@ -74,7 +74,7 @@ const deleteUser = async function (req, res) {
       } catch (err) {
           // Handle errors
           res.status(err?.status || 500).send({
-              status: 'ERROR',
+              status: 'failed',
               message: err?.message || 'An unexpected error occurred',
           });
       }
@@ -83,10 +83,10 @@ const deleteUser = async function (req, res) {
 const logoutUser = async function(req, res){
   try{
     await userService.logoutUser()
-    res.status(200).send({data: 'user succesfuly logged out'})
+    res.status(200).send({status: 'OK',data: 'user succesfuly logged out'})
    }catch(err){
     res.status(err?.status || 500).send({
-      status: 'ERROR',
+      status: 'failed',
       message: err?.message || 'An unexpected error occurred',
   });
   }
