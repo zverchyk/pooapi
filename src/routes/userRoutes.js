@@ -4,18 +4,18 @@ const express = require('express')
 
 const router = express.Router()
 
-
-// getting existing user
-router.get('/', userControl.getUser)
-
 // creating new user
 router.post('/new', userControl.createUser)
+
+
+// getting existing user
+router.get('/', userControl.loginUser)
 
 // delete user 
 router.delete('/:userId', userControl.deleteUser)
 
 // find existing user
-router.get('/exist/', userControl.findUser)
+router.get('/logout', userControl.logoutUser)
 
 
 

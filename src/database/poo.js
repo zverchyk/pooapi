@@ -19,63 +19,63 @@ const createPooList = async function (userId) {
     };
 
     // Insert the document into the collection
-    await collection.insertOne(newPooSessions);
-    return "Poo list inserted:"
+    const result = await collection.insertOne(newPooSessions);
+    console.log('list created', result)
   } catch (err) {
     console.error("Error inserting user:", err);
   } 
 };
 
-const createSession = async function(userInfo){
+const createSession = async function(userId, day){
+  if (!userId || !day) throw new Error('parametrs are missing')
+
   try {
-    
-    const collection = await getCollection(collectionName)
+
+     const collection = await getCollection(collectionName)
     
     const searchQuery ={
-      userId: userInfo.userId
+      userId: userId
     }
     // Document to insert
     const newPooSessions = {$push:{"allUserSessions":
-        {day: userInfo.day,
+        {day: day,
         times:[]}}
 
     };
 
     // Insert the document into the collection
     await collection.updateOne(searchQuery, newPooSessions);
-    return "Session inserted"
-  } catch (err) {
+    
+   } catch (err) {
     console.error("Error inserting user:", err);
+    throw new Error('Error with inserting new session')
+   
   } 
 }
 
-// get poo list for today
-const getSession = async function(userInfo){
+// get session for today
+const getSession = async function(userId, day){
   try {
 
     const collection = await getCollection(collectionName)
 
-    const findQuery = {userId: userInfo.userId}
+    const findQuery = {userId: userId}
 
     const projectionQuery = {
       allUserSessions: 1
     }
 
-    const response = await collection.findOne(findQuery, projectionQuery);
-    
-      
-    if (response) {
-      const filteredSession = response.allUserSessions.find(elem => elem.day === userInfo.day);
-   
-      if (!filteredSession) {
-        throw {status: 404, message: 'no session found for this day'}
-      }
-      
-      return filteredSession.times
-    } else {
-      throw { status: 404, message: "No session found for the specified userId and day" }
+    const userList = await collection.findOne(findQuery, projectionQuery);
+    if(userList === null){
+      throw new Error('user poo list missing') // create a poo list later
     }
+    const session = userList.allUserSessions.find(elem => elem.day === day);
 
+    if (!session) {
+        return false // today's session is not found
+      }
+
+    return session
   } catch (err) {
     throw ({status: err?.status || 500, message: err?.message || err})
   }
@@ -97,21 +97,15 @@ const updateSession = async function(userInfo){
     const setQuery = {
        $set: { "allUserSessions.$.times": userInfo.times} //update operation
     }
-    const matchingDocuments = await collection.find(findQuery).toArray();
+    // const result = await collection.find(findQuery).toArray();
 
      const result = await collection.updateOne(findQuery,setQuery);
-         // Check if the document was updated
-    if (result.matchedCount === 0) {
-      throw { status: 404, message: "No session found for the specified userId and day" };
-    }
-    if (result.modifiedCount === 0) {
-      throw { status: 304, message: "No changes made to the session" };
-    }
-    
-    return `Today's session updated`
-    
+      console.log(result)
+    if(result.modifiedCount ===0) throw new Error("session wasn't updated")
 
-  } catch (err) {
+    }
+    
+   catch (err) {
     throw({status: err?.status || 500, message: err?.message || err })
   }
 
@@ -123,11 +117,14 @@ const updateSession = async function(userInfo){
         const collection = await getCollection(collectionName)
         const deleteQuery= {userId:userId}
 
-        const deleteResult = await collection.deleteOne(deleteQuery)
-        return deleteResult.deletedCount
+        const result = await collection.deleteOne(deleteQuery)
+
+        if(result.deletedCount === 0){
+          throw new Error(`Account isn't found `)}
 
      }catch(err){
       console.error(`Something went wrong trying to delete documents: ${err}\n`);
+      throw err
   
      }
   }

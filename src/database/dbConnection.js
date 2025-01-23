@@ -1,12 +1,14 @@
 const { MongoClient} = require('mongodb');
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+require('dotenv').config()
 
 // link for connection
 const uri = `mongodb+srv://admin:${process.env.DB_PASS}@cluster0.tcvrh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
+
 // name of database
 const dbName = "DailyPoo-database";
+
 const client = new MongoClient(uri);
 
 
@@ -36,6 +38,7 @@ const closeDbConnection= async function(){
 
         await client.close()
         console.log('connection closed')
+        dbInstance = undefined
     
 }
 

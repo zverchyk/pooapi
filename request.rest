@@ -1,26 +1,43 @@
-GET http://localhost:3000/poo/testadmintcom?day=19012025
 
-###
 
-POST http://localhost:3000/poo/newlist/testadmintcom
+
+### Get user by userId
+GET http://localhost:3000/users/?email=too&password=too&day=456331
+
+
+
+### logout
+GET http://localhost:3000/users/logout
 Content-Type: application/json
 
 
-
-###
-
-PUT http://localhost:3000/poo/testadmintcom
+### Create a new user
+POST http://localhost:3000/users/new
 Content-Type: application/json
 
 {
-  "day": "19012025",
-  "times":[ "password", "change"]
+  "day": "test",
+  "email": "tedfsgst",
+  "password": "password123"
 }
-###
-POST http://localhost:3000/poo/testadmintcom?day=19012025
-Content-Type: application/json
 
 
-###
-DELETE  http://localhost:3000/users/678c117cac536d0f09dc9026
+
+### update session 
+PUT http://localhost:3000/poo/update
 Content-Type: application/json
+
+{
+  "userId": "6791c84e7e018b986478082",
+  "day": "test",
+  "times": [222,3232,233233]
+}
+
+###
+DELETE  http://localhost:3000/users/6791c84e7e018b9869478082
+
+
+
+
+
+

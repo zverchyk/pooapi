@@ -34,10 +34,12 @@ const createUser = async function (userInfo) {
 
   } catch (err) {
     console.error("Error inserting user:", err);
+    throw new Error('Database error with inserting user')
+ 
   } 
 };
 
-const getUser = async function(userInfo){
+const loginUser = async function(userInfo){
  
   try {
 
@@ -46,18 +48,20 @@ const getUser = async function(userInfo){
     const findQuery = {email: userInfo.email}
 
     const user = await collection.findOne(findQuery);
-    if (user) {
-
-      if(await bcrypt.compare(userInfo.password, user.password)) {
-        return user._id
-      } else {
-        return false
-      }
-
-    } else {
-      console.log("No user found with the provided email")
-      return false
+    
+    // checks if user exist 
+    if (user === null){
+      throw new Error(`User doesn't exist`)
     }
+
+    const passwordsMatched = await bcrypt.compare(userInfo.password, user.password)
+
+    if (!passwordsMatched) {
+      throw new Error(`email or password is not correct`)
+    }
+    return user._id.toHexString()
+
+
 
   } catch (err) {
     console.error("Error inserting user:", err);
@@ -67,7 +71,7 @@ const getUser = async function(userInfo){
 
 }
 
-const findUser = async function(userName){
+const isUserExist = async function(userName){
  
   try {
     const collection = await getCollection(collectionName)
@@ -75,16 +79,15 @@ const findUser = async function(userName){
     const findQuery = {email: userName}
 
     const user = await collection.findOne(findQuery);
-    if (user) {
-      console.log('user is found');
-      return true
-    } else {
-      console.log("No user found")
-      return false
-    }
 
+    if(user !== null){
+      throw new Error('Username is taken')
+    }
+    
+   
   } catch (err) {
     console.error("Error inserting user:", err);
+    throw err
   }
   
 
@@ -93,14 +96,16 @@ const findUser = async function(userName){
 
 const deleteUser = async function(userId){
    try{
-    console.log('heolo')
+
     const collection = await getCollection(collectionName)
 
         const deleteQuery= {_id:new ObjectId(userId)}
 
-        const deleteResult = await collection.deleteOne(deleteQuery)
-        return deleteResult.deletedCount
+        const result = await collection.deleteOne(deleteQuery)
 
+        if(result.deletedCount === 0){
+          throw new Error(`Account isn't found `)
+        }
 
    }catch(err){
     throw(err)
@@ -113,9 +118,9 @@ const deleteUser = async function(userId){
 
 module.exports ={
   deleteUser,
-  getUser,
+  loginUser,
   createUser,
-  findUser
+  isUserExist
 }
 
 

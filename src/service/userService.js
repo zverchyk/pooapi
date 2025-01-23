@@ -1,58 +1,74 @@
-const User = require('../database/users')
+const user = require('../database/users')
 const poo = require('../database/poo')
+const {closeDbConnection} = require('../database/dbConnection')
 
 
-
-const getUser = async function(userInfo){
+// creates user, poolist and today's session
+const createUserAndPoolist = async function(body){
     try{
-        const user = await User.getUser(userInfo)
-        return  user
+        // check for availability for username
+        await user.isUserExist(body.email)
+        // create user
+        const userId = await user.createUser(body)
+        // create poolist
+        await poo.createPooList(userId)
+        // create todays sesssion
+        await poo.createSession(userId, body.day)
+        
+        return userId
     }catch(err){
         throw err
     }
 }
 
-const deleteUser = async function(userId){
+// login user and gets today's session
+const loginUser = async function(userInfo){
+    let session
     try{
-        const responseUser = await User.deleteUser(userId)
-        const responsePoo =await poo.deletePooList(userId)
+        // login user 
+        const userId = await user.loginUser(userInfo)
+        
+        // get session
+        session = await poo.getSession(userId, userInfo.day)
 
-        if(responseUser!== 0 && responsePoo !==0){
-            return 'deletion succesful'
-        }else{
-            throw ({message:'deletion was unsuccesful'})
+        if (!session) {
+            // create session
+            session = await poo.createSession(userId, userInfo.day)
         }
-       
+
+        return session
+
     }catch(err){
         throw err
     }
 }
 
-const createUser = async function(body){
+const deleteUserAndPooList = async function(userId){
     try{
-        const userid = await User.createUser(body)
-        return userid
+        // delete user
+        await user.deleteUser(userId)
+        // delete poo data
+        await poo.deletePooList(userId)
+    
     }catch(err){
         throw err
     }
 }
 
-const findUser = async function(userName) {
+
+const logoutUser = async function(){
     try{
-        const isExist = await User.findUser(userName)
-        return isExist 
+        await closeDbConnection()
     }catch(err){
         throw err
     }
 }
-
-
 
 
 
 module.exports ={
-    createUser,
-    deleteUser, 
-    getUser,
-    findUser
+    createUserAndPoolist,
+    deleteUserAndPooList, 
+    loginUser,
+    logoutUser
 }
