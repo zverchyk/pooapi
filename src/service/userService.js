@@ -41,7 +41,7 @@ const loginUser = async function(userInfo){
     }catch(err){
         throw err
     }
-}
+} 
 
 const deleteUserAndPooList = async function(userId){
     try{
