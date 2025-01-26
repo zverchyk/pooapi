@@ -35,10 +35,15 @@ const getCollection= async function (collectionName) {
 }
 
 const closeDbConnection= async function(){
-
+    try{
         await client.close()
         console.log('connection closed')
         dbInstance = undefined
+    }catch(err){
+        throw {status: 500, message: 'Error with closing connection'}
+    }
+   
+
     
 }
 

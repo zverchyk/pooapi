@@ -17,7 +17,7 @@ const createUser = async (req,res)=>{
 
           res.status(200).send({status: 'OK', data:{
             userId: userId,
-            message: `new user succsesfully created!!`}})
+            message: `Account succsesfully created!!`}})
         }catch(err){
           res.status(err?.status ||500).send({status: 'failed',error: err?.message || err})
       }
@@ -42,12 +42,14 @@ const loginUser = async (req,res)=>{
           status: 'OK',
           data: {
           userId: userId,
-          session: session? session.times: `todays' session created`}
+          session: session? session.times: `todays' session created`,
+         message: 'You have successfully logged in'
+      }
         })
 
        }catch(err){
         console.error(err)
-        res.status(err?.status || 500).send({status: 'failed',data: err?.message || err})
+        res.status(err?.status || 500).send({status: 'failed',error: err?.message || err})
        }
   
   
@@ -69,13 +71,16 @@ const deleteUser = async function (req, res) {
           // Send success response
           res.status(200).send({
               status: 'OK',
-              message: "user successfully deleted",
+              data:{
+                  message: "user successfully deleted"
+              }
+              
           });
       } catch (err) {
           // Handle errors
           res.status(err?.status || 500).send({
               status: 'failed',
-              message: err?.message || 'An unexpected error occurred',
+              error: err?.message || 'An unexpected error occurred',
           });
       }
   };
@@ -87,7 +92,7 @@ const logoutUser = async function(req, res){
    }catch(err){
     res.status(err?.status || 500).send({
       status: 'failed',
-      message: err?.message || 'An unexpected error occurred',
+      error: err?.message || 'An unexpected error occurred',
   });
   }
 }

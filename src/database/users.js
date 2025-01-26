@@ -65,12 +65,7 @@ const loginUser = async function(userInfo){
 
   } catch (err) {
     // Log detailed error and rethrow if needed
-    console.error("Error retrieving user:", {
-      message: err.message,
-      stack: err.stack,
-      userInfo,
-    });
-    throw new Error("An unexpected error occurred while retrieving the user");
+    throw err
   }
   
 
@@ -110,7 +105,7 @@ const deleteUser = async function(userId){
         const result = await collection.deleteOne(deleteQuery)
 
         if(result.deletedCount === 0){
-          throw new Error(`Account isn't found `)
+          throw { status: 404, message: `User isn't found` };
         }
 
    }catch(err){

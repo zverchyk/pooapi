@@ -100,13 +100,11 @@ const updateSession = async function(userInfo){
     // const result = await collection.find(findQuery).toArray();
 
      const result = await collection.updateOne(findQuery,setQuery);
-      console.log(result)
-    if(result.modifiedCount ===0) throw new Error("session wasn't updated")
-
+    if(result.modifiedCount ===0) throw {status: 404, message: 'session not found'}
     }
     
    catch (err) {
-    throw({status: err?.status || 500, message: err?.message || err })
+    throw err
   }
 
   }
@@ -120,7 +118,8 @@ const updateSession = async function(userInfo){
         const result = await collection.deleteOne(deleteQuery)
 
         if(result.deletedCount === 0){
-          throw new Error(`Account isn't found `)}
+          throw { status: 404, message: `User data isn't found` };
+        }
 
      }catch(err){
       console.error(`Something went wrong trying to delete documents: ${err}\n`);
