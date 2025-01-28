@@ -25,6 +25,7 @@ const createUser = async (req,res)=>{
 
     }
 const loginUser = async (req,res)=>{
+
       const {day,email, password} =req.query
         // Validate if required parameters are missing
       if (!email || !password || !day) {

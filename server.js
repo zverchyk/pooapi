@@ -10,15 +10,16 @@ const userRouter = require('./src/routes/userRoutes')
 const pooRouter = require('./src/routes/pooRoutes')
 // for schema creation
 
-const corsOptions = {
-    origin: process.env.FRONT_END_DOMAIN, // Replace with your frontend's domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    credentials: true, // If you're using cookies or sessions
-};
+// const corsOptions = {
+//     origin: process.env.FRONT_END_DOMAIN, // Replace with your frontend's domain
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+//     credentials: true, // If you're using cookies or sessions
+// };
 
-// Apply CORS middleware
-app.use(cors(corsOptions));
+// // Apply CORS middleware
+// app.use(cors(corsOptions));
 
+app.use(cors)
 
 app.use(express.json());
 
