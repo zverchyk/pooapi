@@ -43,7 +43,7 @@ const loginUser = async (req,res)=>{
           status: 'OK',
           data: {
           userId: userId,
-          session: session? session.times: `todays' session created`,
+          session: session? session.times: [],
          message: 'You have successfully logged in'
       }
         })
