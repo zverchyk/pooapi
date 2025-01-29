@@ -20,7 +20,7 @@ const createPooList = async function (userId) {
 
     // Insert the document into the collection
     const result = await collection.insertOne(newPooSessions);
-    console.log('list created', result)
+
   } catch (err) {
     console.error("Error inserting user:", err);
   } 
@@ -83,7 +83,7 @@ const getSession = async function(userId, day){
 
 
 }
-
+// updates today's session
 const updateSession = async function(userInfo){
 
   try {
@@ -108,28 +108,51 @@ const updateSession = async function(userInfo){
   }
 
   }
+// deletes all poo list for one user
+const deletePooList = async function(userId){
+    try{
+        
+      const collection = await getCollection(collectionName)
+      const deleteQuery= {userId:userId}
 
-  const deletePooList = async function(userId){
-     try{
-          
-        const collection = await getCollection(collectionName)
-        const deleteQuery= {userId:userId}
+      const result = await collection.deleteOne(deleteQuery)
 
-        const result = await collection.deleteOne(deleteQuery)
+      if(result.deletedCount === 0){
+        throw { status: 404, message: `User data isn't found` };
+      }
 
-        if(result.deletedCount === 0){
-          throw { status: 404, message: `User data isn't found` };
-        }
+    }catch(err){
+    console.error(`Something went wrong trying to delete documents: ${err}\n`);
+    throw err
 
-     }catch(err){
-      console.error(`Something went wrong trying to delete documents: ${err}\n`);
-      throw err
-  
-     }
+    }
+}
+
+// get all sessions throught all time for one user
+const getAllSessions = async function(userId){
+  try {
+    const collection = await getCollection(collectionName)
+
+    const findQuery = {userId: userId}
+
+    const projectionQuery = {
+      allUserSessions: 1
+    }
+
+    const userList = await collection.findOne(findQuery, projectionQuery);
+    if(userList === null){
+      throw {status: 404, message:'user poo list missing'} // create a poo list later
+    }
+    return userList.allUserSessions
+  } catch (err) {
+    throw ({status: err?.status || 500, message: err?.message || err})
   }
- 
-const deleteSessionElement = async function(){
+}
 
+
+// deletes elment from session by clicking of header element 
+const deleteSessionElement = async function(){
+    return 
 }
 
 
@@ -138,6 +161,7 @@ module.exports ={
   getSession,
   updateSession,
   createSession,
-  deletePooList
+  deletePooList,
+  getAllSessions
 }
 

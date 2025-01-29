@@ -38,7 +38,7 @@ const loginUser = async (req,res)=>{
 
        try{
         const [session, userId] = await userService.loginUser(body)
-        console.log(session)
+
         res.status(200).send({
           status: 'OK',
           data: {

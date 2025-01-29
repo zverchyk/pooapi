@@ -1,4 +1,16 @@
+### email sending 
+POST http://localhost:3000/email/chart
+Content-Type: application/json
 
+{
+  "email": "zverchykos@gmail.com",
+  "imageData": "data:f",
+  }
+
+
+
+### get all sessions for one user
+GET http://localhost:3000/poo/all/67973ef9e8c34c20adfc5c0f
 
 
 ### Get loging user

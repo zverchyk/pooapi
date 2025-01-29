@@ -21,8 +21,25 @@ const updateSession = async function(req, res){
 
 }
 
+const getAllSessions = async function(req, res){
+    const {userId} = req.params
+
+    if(!userId) {
+        res.status(400).send({data: {error: 'userId is missing'}})
+        return }
+
+    try{
+        const sessions = await pooService.getAllSessions(userId)
+        res.send({status: "OK", data: sessions})
+    }catch(err){
+        res.status(err?.status ||500).send({error: err?.message || err})
+    }
+
+}
+
 
 module.exports ={
     updateSession,
+    getAllSessions
 
   }

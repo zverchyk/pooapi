@@ -9,9 +9,18 @@ const updateSession = async function(userInfo){
     }
 }
 
+const getAllSessions = async function(userId){
+    try{
+        const sessions = await poo.getAllSessions(userId)
+        return sessions
+    }catch(err){
+        throw(err)
+    }
+}
 
 module.exports ={
-    updateSession
+    updateSession,
+    getAllSessions
 
   }
   
