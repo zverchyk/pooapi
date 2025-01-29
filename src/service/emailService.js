@@ -14,7 +14,7 @@ const sendMail = function(email, image) {
 
 
  // Remove the base64 header "data:image/png;base64,"
- const base64Data = image.replace('/^data:image\/png;base64,/', '');
+ const base64Data = image.replace(/^data:image\/png;base64,/, '');
     
  const mailOptions = {
      from: process.env.APP_EMAIL,

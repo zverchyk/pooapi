@@ -13,8 +13,9 @@ const sendMail = async function(req, res){
 
     try{
         
-        await emailService.sendMail(body.email, body.imageData)
-        res.send({status: "OK", data: "session was updated"})
+        emailService.sendMail(body.email, body.imageData)
+        res.send({status: "OK", data: {
+            message: "Chart was sent to your email"}})
     }catch(err){
         res.status(err?.status ||500).send({error: err?.message || err})
     }
