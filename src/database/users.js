@@ -25,6 +25,7 @@ const createUser = async function (userInfo) {
     const newUser = {
       password: await bcrypt.hash(userInfo.password, 10),
       email: userInfo.email,
+      icon:'none'
     };
 
     // Insert the document into the collection
@@ -47,7 +48,8 @@ const loginUser = async function(userInfo){
     const findQuery = {email: userInfo.email}
 
     const user = await collection.findOne(findQuery);
-    
+
+    console.log(user)
     // checks if user exist 
     if (user === null){
 
@@ -57,9 +59,9 @@ const loginUser = async function(userInfo){
     const passwordsMatched = await bcrypt.compare(userInfo.password, user.password)
 
     if (!passwordsMatched) {
-      throw {status: 404, message: `Username or passwrord is incorrect`}
+      throw {status: 404, message: `Username or password is incorrect`}
     }
-    return user._id.toHexString()
+    return [user._id.toHexString(), user.icon]
 
 
 
@@ -114,6 +116,38 @@ const deleteUser = async function(userId){
    }
 }
 
+const updateUser = async function(newUserInfo){
+  
+    try {
+      const collection = await getCollection(collectionName)
+  
+      const findQuery ={
+        "_id": new ObjectId(newUserInfo.userId),
+      }
+      let updateObject ={}
+  // ✅ Add only if the key exists
+      if (newUserInfo?.newEmail) updateObject["email"] = newUserInfo.newEmail;
+      if (newUserInfo?.newPassword) updateObject["password"] = await bcrypt.hash(newUserInfo.newPassword, 10);
+      if (newUserInfo?.newIcon) updateObject["icon"] = newUserInfo.newIcon;
+
+      if (Object.keys(updateObject).length === 0) throw {status: 404, message: "❌ No fields to update!"}
+          
+      
+      const setQuery = { $set: updateObject}
+      // const result = await collection.find(findQuery).toArray();
+  
+       const result = await collection.updateOne(findQuery,setQuery);
+       console.log(result)
+      if(result.modifiedCount ===0 && result.matchedCount === 1) throw {status: 404, message: 'user is up to date'}
+      
+      if (result.matchedCount === 0) throw {status: 404, message: 'user is not fond'}
+    }
+     catch (err) {
+      throw err
+    }
+}
+
+
 
 
 
@@ -121,7 +155,8 @@ module.exports ={
   deleteUser,
   loginUser,
   createUser,
-  isUserExist
+  isUserExist,
+  updateUser
 }
 
 

@@ -15,7 +15,10 @@ const pooRouter = require('./src/routes/pooRoutes')
 const emailRouter = require('./src/routes/emailRoutes')
 
 
-const corsOptions = {
+if(process.env.FRONT_END_DOMAIN==='https://localhost:1234'){
+    app.use(cors())
+}else{
+    const corsOptions = {
     origin: process.env.FRONT_END_DOMAIN, // Replace with your frontend's domain
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     credentials: true, // If you're using cookies or sessions
@@ -23,8 +26,11 @@ const corsOptions = {
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
+}
 
-// app.use(cors())
+
+
+
 
 
 

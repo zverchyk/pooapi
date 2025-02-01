@@ -1,5 +1,5 @@
 ### email sending 
-editor.maxTokenizationLineLength
+
 POST http://localhost:3000/email/chart
 Content-Type: application/json
 
@@ -33,11 +33,24 @@ POST http://localhost:3000/users/new
 Content-Type: application/json
 
 {
-  "day": "test",
+  "day": "dfsdftest",
   "email": "test2",
   "password": "password123"
 }
 
+
+###update user
+
+PUT http://localhost:3000/users/
+Content-Type: application/json
+
+{
+  "userId": "67932b4d12717b630b842ff5",
+  "newEmail": "admin@a.com",
+  "newPassword": "a",
+  "newIcon": "icon"
+
+}
 
 
 ### update session 
@@ -45,7 +58,7 @@ PUT http://localhost:3000/poo/update
 Content-Type: application/json
 
 {
-  "userId": "6791e0d52322876061583c58",
+  "userId": "67932b4d12717b630b842ff5",
   "day": "test",
   "times": [222,3232,233233]
 }

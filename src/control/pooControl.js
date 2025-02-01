@@ -7,12 +7,13 @@ const updateSession = async function(req, res){
     if(!body?.userId) {
         res.status(400).send({data: {error: 'userId is missing'}})
         return }
-    if(!body?.day && !body?.times) {
+    if(!body?.day && !body?.times && !body?.sizes) {
         res.status(400).send({data: {error: 'body parametrs are missing'}})
         return }
 
     try{
-        const userInfo = {userId: body.userId, day: body.day, times: body.times}
+     
+        const userInfo = {userId: body.userId, day: body.day, times: body.times, sizes: body.sizes}
         await pooService.updateSession(userInfo)
         res.send({status: "OK", data: "session was updated"})
     }catch(err){

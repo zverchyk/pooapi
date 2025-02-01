@@ -9,7 +9,10 @@ router.post('/new', userControl.createUser)
 
 
 // getting existing user
-router.get('/', userControl.loginUser)
+router
+.route('/')
+.get(userControl.loginUser)
+.put(userControl.updateUser)
 
 // delete user 
 router.delete('/:userId', userControl.deleteUser)

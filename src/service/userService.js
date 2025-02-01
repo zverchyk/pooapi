@@ -26,7 +26,7 @@ const loginUser = async function(userInfo){
     let session
     try{
         // login user 
-        const userId = await user.loginUser(userInfo)
+        const [userId, icon] = await user.loginUser(userInfo)
         
         // get session
         session = await poo.getSession(userId, userInfo.day)
@@ -36,7 +36,7 @@ const loginUser = async function(userInfo){
             session = await poo.createSession(userId, userInfo.day)
         }
 
-        return [session, userId]
+        return [session, userId, icon]
 
     }catch(err){
         throw err
@@ -64,11 +64,21 @@ const logoutUser = async function(){
     }
 }
 
+const updateUser = async function(newUserInfo){
+    try{
+        await user.isUserExist(newUserInfo.newEmail)
+        await user.updateUser(newUserInfo)
+        
+    }catch(err){
+        throw err
+    }
+    }
 
 
 module.exports ={
     createUserAndPoolist,
     deleteUserAndPooList, 
     loginUser,
-    logoutUser
+    logoutUser,
+    updateUser
 }

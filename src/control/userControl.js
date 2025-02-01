@@ -37,14 +37,15 @@ const loginUser = async (req,res)=>{
       const body = {day: day, email:email, password: password}
 
        try{
-        const [session, userId] = await userService.loginUser(body)
-
+        const [session, userId, icon] = await userService.loginUser(body)
+        console.log(icon)
         res.status(200).send({
           status: 'OK',
           data: {
           userId: userId,
-          session: session? session.times: [],
-         message: 'You have successfully logged in'
+          icon: icon,
+          session: session? session: null,         
+          message: 'You have successfully logged in'
       }
         })
 
@@ -55,6 +56,35 @@ const loginUser = async (req,res)=>{
   
   
   }
+
+const updateUser= async(req,res)=>{
+  const { body } = req
+  if(!body) {
+    res.status(400).send({status: 'failed',data:"body is missing"})
+    return
+  }
+  if(!body.userId ){
+    res.status(400).send({status: 'failed',data:"user id is missing"})
+    return
+  }
+ console.log(body.newIcon)
+  if (!body.newEmail && !body.newPassword && !body.newIcon){
+    res.status(404).send({status: 'failed', data:  "parametr is missing"})
+    return
+  }
+  try{
+    await userService.updateUser(body)
+
+    res.status(200).send({status: 'OK', data:{
+      message: `user info updated`}
+    })
+  }catch(err){
+    res.status(err?.status ||500).send({status: 'failed',error: err?.message || err})
+}
+
+
+
+}
 
 const deleteUser = async function (req, res) {
       const {params: { userId },} = req;
@@ -108,6 +138,7 @@ const logoutUser = async function(req, res){
       createUser,
       deleteUser, 
       loginUser,
-      logoutUser
+      logoutUser,
+      updateUser
       
   }

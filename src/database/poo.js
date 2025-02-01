@@ -39,7 +39,8 @@ const createSession = async function(userId, day){
     // Document to insert
     const newPooSessions = {$push:{"allUserSessions":
         {day: day,
-        times:[]}}
+        times:[],
+        sizes:[]}}
 
     };
 
@@ -93,9 +94,11 @@ const updateSession = async function(userInfo){
       "userId": userInfo.userId,
       "allUserSessions": {$elemMatch: {day: userInfo.day}}
     }
-
+    console.log(userInfo.times)
     const setQuery = {
-       $set: { "allUserSessions.$.times": userInfo.times} //update operation
+       $set: { "allUserSessions.$.times": userInfo.times,
+              "allUserSessions.$.sizes": userInfo.sizes
+       } //update operation
     }
     // const result = await collection.find(findQuery).toArray();
 
