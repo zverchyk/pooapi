@@ -19,7 +19,7 @@ GET http://localhost:3000/poo/all/67973ef9e8c34c20adfc5c0f
 
 
 ### Get loging user
-GET http://localhost:3000/users/?email=too&password=too&day=456331
+GET http://localhost:3000/users/?email=&password=too&day=456331
 
 
 
@@ -41,14 +41,14 @@ Content-Type: application/json
 
 ###update user
 
-PUT http://localhost:3000/users/
+PUT http://localhost:3000/users
 Content-Type: application/json
 
 {
   "userId": "67932b4d12717b630b842ff5",
-  "newEmail": "admin@a.com",
-  "newPassword": "a",
-  "newIcon": "icon"
+
+  "password": "z",
+  "icon": "icon"
 
 }
 

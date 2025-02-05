@@ -49,7 +49,7 @@ const loginUser = async function(userInfo){
 
     const user = await collection.findOne(findQuery);
 
-    console.log(user)
+
     // checks if user exist 
     if (user === null){
 
@@ -126,9 +126,9 @@ const updateUser = async function(newUserInfo){
       }
       let updateObject ={}
   // ✅ Add only if the key exists
-      if (newUserInfo?.newEmail) updateObject["email"] = newUserInfo.newEmail;
-      if (newUserInfo?.newPassword) updateObject["password"] = await bcrypt.hash(newUserInfo.newPassword, 10);
-      if (newUserInfo?.newIcon) updateObject["icon"] = newUserInfo.newIcon;
+      if (newUserInfo?.email) updateObject["email"] = newUserInfo.email;
+      if (newUserInfo?.password) updateObject["password"] = await bcrypt.hash(newUserInfo.password, 10);
+      if (newUserInfo?.icon) updateObject["icon"] = newUserInfo.icon;
 
       if (Object.keys(updateObject).length === 0) throw {status: 404, message: "❌ No fields to update!"}
           
@@ -137,7 +137,7 @@ const updateUser = async function(newUserInfo){
       // const result = await collection.find(findQuery).toArray();
   
        const result = await collection.updateOne(findQuery,setQuery);
-       console.log(result)
+
       if(result.modifiedCount ===0 && result.matchedCount === 1) throw {status: 404, message: 'user is up to date'}
       
       if (result.matchedCount === 0) throw {status: 404, message: 'user is not fond'}
@@ -166,62 +166,5 @@ module.exports ={
 
 
 
-// // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   }
-// });
-
-const getDataFromJson = function(){
-  const DB = require('./db.json')
-const DBlist = Object.entries(DB).map(([key, value]) => ({
-    key,
-    ...value,
-  }));
-  return DBlist
-}
 
 
-
-
-async function insertManyCollection(){
-    try{
-        const insertManyResult = await collection.insertMany(DBlist)
-        console.log(`${insertManyResult.insertedCount} documents successfully inserted.\n`);
-    } catch (err) {
-      console.error(`Something went wrong trying to insert the new documents: ${err}\n`);
-    }
-}
-
-
-
-
-
-async function retriveData(){
-    try {
-        const cursor = await collection.find(findQuery).sort({ name: 1 });
-        await cursor.forEach(recipe => {
-          console.log(`${recipe.name} has ${recipe.ingredients.length} ingredients and takes ${recipe.prepTimeInMinutes} minutes to make.`);
-        });
-        // add a linebreak
-        console.log();
-      } catch (err) {
-        console.error(`Something went wrong trying to find the documents: ${err}\n`);
-      }
-}
-
-async function run2() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
-}

@@ -66,7 +66,7 @@ const logoutUser = async function(){
 
 const updateUser = async function(newUserInfo){
     try{
-        await user.isUserExist(newUserInfo.newEmail)
+        await user.isUserExist(newUserInfo.email)
         await user.updateUser(newUserInfo)
         
     }catch(err){

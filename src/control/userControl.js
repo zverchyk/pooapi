@@ -38,7 +38,7 @@ const loginUser = async (req,res)=>{
 
        try{
         const [session, userId, icon] = await userService.loginUser(body)
-        console.log(icon)
+
         res.status(200).send({
           status: 'OK',
           data: {
@@ -67,8 +67,8 @@ const updateUser= async(req,res)=>{
     res.status(400).send({status: 'failed',data:"user id is missing"})
     return
   }
- console.log(body.newIcon)
-  if (!body.newEmail && !body.newPassword && !body.newIcon){
+ 
+  if (!body.email && !body.password && !body.icon){
     res.status(404).send({status: 'failed', data:  "parametr is missing"})
     return
   }

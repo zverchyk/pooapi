@@ -94,7 +94,7 @@ const updateSession = async function(userInfo){
       "userId": userInfo.userId,
       "allUserSessions": {$elemMatch: {day: userInfo.day}}
     }
-    console.log(userInfo.times)
+
     const setQuery = {
        $set: { "allUserSessions.$.times": userInfo.times,
               "allUserSessions.$.sizes": userInfo.sizes
