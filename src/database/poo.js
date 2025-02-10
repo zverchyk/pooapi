@@ -155,7 +155,7 @@ const getAllSessions = async function(userId){
 
 // element adds by ioT device
 const addElementToSession = async function(userInfo){
-  console.log(userInfo)
+
   try{  
   
   const collection = await getCollection(collectionName);
@@ -167,7 +167,7 @@ const addElementToSession = async function(userInfo){
   };
   const resultTime = await collection.updateOne(findQuery, setQuery);
   if(resultTime.modifiedCount ===0) throw {status: 404, message:  'session not found'}
-  console.log(resultTime)
+
   const setQuerySize = {
     $push: { "allUserSessions.$.sizes": "2rem" }
   };

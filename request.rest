@@ -78,8 +78,8 @@ POST http://localhost:3000/poo/iotrecord
 Content-Type: application/json
 
 {
-  "userId": "67a982e02c5c1a7ce6c04106",
-  "day": "05022025",
+  "userId": "67a98f6e3314c9ebc6aefbf9",
+  "day": "09022025",
   "time": "00:01:00"
 
 }

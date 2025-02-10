@@ -22,11 +22,16 @@ const getAllSessions = async function(userId){
 
 const addElementToSession = async function(userInfo) {
     try{
-     await poo.addElementToSession(userInfo)
-        
+        const exist = await poo.getSession(userInfo.userId, userInfo.day)
+        if(!exist){
+            await poo.createSession(userInfo.userId, userInfo.day)
+
+        }
+         await poo.addElementToSession(userInfo) 
     }catch(err){
         throw(err)
     }
+    
     }
 
 module.exports ={
