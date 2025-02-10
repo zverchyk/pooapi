@@ -18,7 +18,19 @@ const getAllSessions = async function(userId){
     }
 }
 
+// ioT device
+
+const addElementToSession = async function(userInfo) {
+    try{
+     await poo.addElementToSession(userInfo)
+        
+    }catch(err){
+        throw(err)
+    }
+    }
+
 module.exports ={
+    addElementToSession, //ioT device
     updateSession,
     getAllSessions
 

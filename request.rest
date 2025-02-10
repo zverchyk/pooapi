@@ -33,9 +33,9 @@ POST http://localhost:3000/users/new
 Content-Type: application/json
 
 {
-  "day": "dfsdftest",
-  "email": "test2",
-  "password": "password123"
+  "day": "05022025",
+  "email": "r",
+  "password": "r"
 }
 
 
@@ -43,10 +43,11 @@ Content-Type: application/json
 
 PUT http://localhost:3000/users
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSmltIiwiaWF0IjoxNTY4NzU5ODEyLCJleHAiOjE1Njg3NTk4Mjd9.0i6Im2gKz7jj8wM7aZZzOPaBS_xHoZWAqBwnldn-lQQ
 
 {
-  "userId": "67932b4d12717b630b842ff5",
-
+  "userId": "67a522af0077eaf50c92bbcd",
+  "email":"t@t.com",
   "password": "z",
   "icon": "icon"
 
@@ -58,9 +59,10 @@ PUT http://localhost:3000/poo/update
 Content-Type: application/json
 
 {
-  "userId": "67932b4d12717b630b842ff5",
-  "day": "test",
-  "times": [222,3232,233233]
+  "userId": "67a982e02c5c1a7ce6c04106",
+  "day": "05022025",
+  "times": [222,3232,233233],
+  "sizes": [2,2,2]
 }
 
 ###
@@ -70,4 +72,14 @@ DELETE  http://localhost:3000/users/6791c84e7e018b9869478082
 
 
 
+### add record
 
+POST http://localhost:3000/poo/iotrecord
+Content-Type: application/json
+
+{
+  "userId": "67a982e02c5c1a7ce6c04106",
+  "day": "05022025",
+  "time": "00:01:00"
+
+}

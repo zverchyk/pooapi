@@ -22,5 +22,4 @@ router.get('/logout', userControl.logoutUser)
 
 
 
-
 module.exports = router

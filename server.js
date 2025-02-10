@@ -29,11 +29,6 @@ app.use(cors(corsOptions));
 }
 
 
-
-
-
-
-
 app.use('/users', userRouter)
 app.use('/poo', pooRouter)
 app.use('/email', emailRouter)

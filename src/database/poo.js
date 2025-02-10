@@ -153,13 +153,37 @@ const getAllSessions = async function(userId){
 }
 
 
-// deletes elment from session by clicking of header element 
-const deleteSessionElement = async function(){
-    return 
+// element adds by ioT device
+const addElementToSession = async function(userInfo){
+  console.log(userInfo)
+  try{  
+  
+  const collection = await getCollection(collectionName);
+  const findQuery = {
+    "userId": userInfo.userId,
+    "allUserSessions.day": userInfo.day
+  };
+  const setQuery = {$push: { "allUserSessions.$.times": userInfo.time  }
+  };
+  const resultTime = await collection.updateOne(findQuery, setQuery);
+  if(resultTime.modifiedCount ===0) throw {status: 404, message:  'session not found'}
+  console.log(resultTime)
+  const setQuerySize = {
+    $push: { "allUserSessions.$.sizes": "2rem" }
+  };
+  const resultSize = await collection.updateOne(findQuery, setQuerySize);
+  if(resultSize.modifiedCount ===0) throw {status: 404, message: 'session not found'}
+
+
+    
+  }catch(err) {
+    throw err
+  }
 }
 
 
 module.exports ={
+  addElementToSession, //ioT device
   createPooList,
   getSession,
   updateSession,

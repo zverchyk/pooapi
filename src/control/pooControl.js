@@ -38,8 +38,32 @@ const getAllSessions = async function(req, res){
 
 }
 
+const addElementToSession = async function(req, res){
+
+        const {body} = req
+
+        if(!body?.userId) {
+            res.status(400).send({data: {error: 'userId is missing'}})
+            return }
+        if(!body?.day && !body?.time) {
+            res.status(400).send({data: {error: 'body parametrs are missing'}})
+            return }
+    
+        try{
+         
+            const userInfo = {userId: body.userId, day: body.day, time: body.time}
+
+            await pooService.addElementToSession(userInfo)
+            res.send({status: "OK", data: "record was added"})
+
+    }catch(err){
+        res.status(err?.status ||500).send({error: err?.message || err})
+    }
+}
+
 
 module.exports ={
+    addElementToSession,
     updateSession,
     getAllSessions
 

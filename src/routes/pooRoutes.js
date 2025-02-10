@@ -9,6 +9,8 @@ router.put('/update', pooControl.updateSession)
 
 router.get('/all/:userId', pooControl.getAllSessions)
 
+router.post('/iotrecord', pooControl.addElementToSession)
+
 
 module.exports = router
 
