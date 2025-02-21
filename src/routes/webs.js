@@ -9,7 +9,9 @@ const clients = new Map(); // Store WebSocket connections by userId
 
 // Handle WebSocket connections
 wss.on("connection", (ws) => {
+    console.log('websocket works')
     ws.on("message", (message) => {
+        console.log(message)
         const data = JSON.parse(message);
         if (data.type === "register") {
             clients.set(data.userId, ws); // Store client connection
@@ -28,6 +30,7 @@ wss.on("connection", (ws) => {
 
 const connectUser = function(req, res, next){
     const {body} = req;
+    console.log(clients, 'clients')
     
     if (clients.has(body.userId)) {
         const client = clients.get(body.userId);
