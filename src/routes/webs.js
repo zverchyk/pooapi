@@ -1,6 +1,10 @@
+const path = require('path');
+require('dotenv').config()
+
 const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ port: 8070 });
+const PORT = process.env.SOCKETPORT || 8080; // Use Render's assigned port or 8080 for local testing
+const wss = new WebSocket.Server({ port: PORT });
 const clients = new Map(); // Store WebSocket connections by userId
 
 // Handle WebSocket connections
