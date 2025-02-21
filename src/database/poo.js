@@ -169,7 +169,7 @@ const addElementToSession = async function(userInfo){
   if(resultTime.modifiedCount ===0) throw {status: 404, message:  'session not found'}
 
   const setQuerySize = {
-    $push: { "allUserSessions.$.sizes": "2rem" }
+    $push: { "allUserSessions.$.sizes": userInfo.size }
   };
   const resultSize = await collection.updateOne(findQuery, setQuerySize);
   if(resultSize.modifiedCount ===0) throw {status: 404, message: 'session not found'}

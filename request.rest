@@ -70,7 +70,7 @@ DELETE  http://localhost:3000/users/6791c84e7e018b9869478082
 
 
 
-
+# r ::  67b8be97e06da3fd91c8c360
 
 ### add record
 
@@ -78,8 +78,9 @@ POST http://localhost:3000/poo/iotrecord
 Content-Type: application/json
 
 {
-  "userId": "67a98f6e3314c9ebc6aefbf9",
-  "day": "09022025",
-  "time": "00:01:00"
+  "userId": "67b8be97e06da3fd91c8c360",
+  "day": "21022025",
+  "time": "00:01:00", 
+  "size": "2rem"
 
 }

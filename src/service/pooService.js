@@ -23,6 +23,7 @@ const getAllSessions = async function(userId){
 const addElementToSession = async function(userInfo) {
     try{
         const exist = await poo.getSession(userInfo.userId, userInfo.day)
+
         if(!exist){
             await poo.createSession(userInfo.userId, userInfo.day)
 

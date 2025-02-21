@@ -37,7 +37,7 @@ const getAllSessions = async function(req, res){
     }
 
 }
-
+// iot device
 const addElementToSession = async function(req, res){
 
         const {body} = req
@@ -45,13 +45,13 @@ const addElementToSession = async function(req, res){
         if(!body?.userId) {
             res.status(400).send({data: {error: 'userId is missing'}})
             return }
-        if(!body?.day && !body?.time) {
+        if(!body?.day && !body?.time && body?.size) {
             res.status(400).send({data: {error: 'body parametrs are missing'}})
             return }
     
         try{
          
-            const userInfo = {userId: body.userId, day: body.day, time: body.time}
+            const userInfo = {userId: body.userId, day: body.day, time: body.time, size: body.size}
 
             await pooService.addElementToSession(userInfo)
             res.send({status: "OK", data: "record was added"})

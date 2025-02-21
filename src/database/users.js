@@ -25,7 +25,7 @@ const createUser = async function (userInfo) {
     const newUser = {
       password: await bcrypt.hash(userInfo.password, 10),
       email: userInfo.email,
-      icon:'none'
+      icon:'💩'
     };
 
     // Insert the document into the collection
