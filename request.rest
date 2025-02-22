@@ -72,15 +72,22 @@ DELETE  http://localhost:3000/users/6791c84e7e018b9869478082
 
 # r ::  67b8be97e06da3fd91c8c360
 
-### add record
+### add record with (WEBSOCKET)
 
 POST http://localhost:3000/poo/iotrecord
 Content-Type: application/json
 
 {
   "userId": "67b8be97e06da3fd91c8c360",
-  "day": "21022025",
+  "day": "22022025",
   "time": "00:01:00", 
   "size": "2rem"
 
 }
+
+###
+GET http://localhost:3000/poo/events/67b8be97e06da3fd91c8c360
+
+
+
+

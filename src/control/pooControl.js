@@ -1,4 +1,5 @@
 const pooService = require('../service/pooService')
+const sseControl = require('./sseControl')
 
 
 const updateSession = async function(req, res){
@@ -42,6 +43,7 @@ const addElementToSession = async function(req, res){
 
         const {body} = req
 
+
         if(!body?.userId) {
             res.status(400).send({data: {error: 'userId is missing'}})
             return }
@@ -54,6 +56,11 @@ const addElementToSession = async function(req, res){
             const userInfo = {userId: body.userId, day: body.day, time: body.time, size: body.size}
 
             await pooService.addElementToSession(userInfo)
+
+                // Send data only to the specific user
+                
+            const client = sseControl.clients.get(body.userId);
+            client?.write(`data: ${JSON.stringify({size:body.size, time:body.time})}\n\n`);
             res.send({status: "OK", data: "record was added"})
 
     }catch(err){
